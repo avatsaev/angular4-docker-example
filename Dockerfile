@@ -1,11 +1,21 @@
-FROM nginx:1.11-alpine
+FROM nginx:1.13-alpine
 
-RUN mkdir app
+ENV APP_PATH /app
+ENV PATH $APP_PATH/node_modules/@angular/cli/bin/:$PATH
 
-WORKDIR app
+RUN apk add --update --no-cache nodejs && mkdir $APP_PATH && rm -rf /etc/nginx/conf.d/*
+WORKDIR $APP_PATH
 
 COPY . .
 
-RUN apk add --update nodejs=6.10.3-r0
+COPY nginx/default.conf /etc/nginx/conf.d/
 
-RUN
+RUN npm install \
+  && ng build --aot --prod \
+  && rm -rf /usr/share/nginx/html/* \
+  && mv ./dist/* /usr/share/nginx/html/ \
+  && npm cache clean \
+  && apk del nodejs libstdc++ libgcc libuv http-parser ca-certificates \
+  && rm -rf ./*
+
+CMD ["nginx", "-g", "daemon off;"]
