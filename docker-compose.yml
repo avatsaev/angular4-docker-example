@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+  nginx:
+    build: nginx
+    ports:
+      - 88:80
+    volumes:
+      - ./nginx/frontend:/var/www/frontend
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/logs/nginx/:/var/log/nginx

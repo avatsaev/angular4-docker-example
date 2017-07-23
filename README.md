@@ -1,21 +1,26 @@
+# Docker example for Angular4 running on Nginx
 
-# Dockerized Angular 4 App (with Angular CLI)
+## 1. Building the image and running the container
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-
-## Build docker image
-
-```
-$ docker build -t myapp . 
+```sh
+docker-compose up -d --build
 ```
 
-## Run the container
+## 2. Identification of the IP address of the container
+
+```sh
+docker inspect angular4dockerexample_nginx_1 | grep IPA
+          #  "SecondaryIPAddresses": null,
+          #  "IPAddress": "",
+          #          "IPAMConfig": null,
+          #          "IPAddress": "172.18.0.2",
 
 ```
-$ docker run -d -p 8080:80 myapp
-```
+
+Open your browser on [172.18.0.2](http://172.18.0.2/)
 
 
-The app will be available at http://localhost:8080
+## 3. Actual issue
+The landing page is stoping at `Loading...`.
 
-You can easily tweak the nginx config in ```nginx/default.conf```
+No error message is found in the console.
